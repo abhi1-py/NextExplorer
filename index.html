@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Custom Search Engine & News Feed</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            color: #eee;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Header styling */
+        header {
+            background-color: #111;
+            color: #eee;
+            text-align: center;
+            padding: 15px 0;
+            animation: slideDown 0.5s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Search container styling */
+        .search-container {
+            text-align: center;
+            margin-top: 30px;
+            animation: slideUp 0.5s ease-in-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: 1px solid #888;
+            background-color: #444;
+            color: #eee;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #eee;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* News feed styling */
+        .news-feed {
+            margin-top: 50px;
+            padding: 20px;
+            border: 1px solid #888;
+            background-color: #222;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.5s ease-in-out;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .news-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #444;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .news-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .news-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .news-item a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .news-item a:hover {
+            text-decoration: underline;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            /* Adjust the width as needed */
+            height: auto;
+        }
+
+        header {
+            background-color: #111;
+            color: #eee;
+            text-align: center;
+            padding: 15px 0;
+            position: relative;
+            animation: slideDown 0.5s ease-in-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* Round image */
+        .header-image {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .header-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>NewsNest Explorer</h1>
+        <div class="header-image">
+            <img src="ne.png" alt="Profile Image">
+        </div>
+    </header>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Enter your search">
+        <button onclick="search()">Search</button>
+    </div>
+
+    <div class="news-feed">
+        <h2>Live News Feed</h2>
+        <div id="newsFeed">
+            <!-- News updates will appear here -->
+        </div>
+    </div>
+    <script> function search() {
+            const searchTerm = document.getElementById('searchInput').value;
+            const encodedTerm = encodeURI(searchTerm);
+            const searchURL = `https://www.google.com/search?q=${encodedTerm}`;
+            window.open(searchURL, '_blank');
+        }
+
+        async function fetchNews() {
+            const apiKey = 'ac9266b67bbd48f2abc013f1bce81fc1'; // Replace with your News API key
+            const apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                const newsFeed = document.getElementById('newsFeed');
+                if (data.articles) {
+                    data.articles.slice(0, 5).forEach(article => {
+                        const newsItem = document.createElement('div');
+                        newsItem.classList.add('news-item');
+                        newsItem.innerHTML = `<strong>${article.title}</strong><br>${article.description}<br><a href="${article.url}" target="_blank">Read more</a>`;
+                        newsFeed.appendChild(newsItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching news:', error);
+            }
+        }
+
+        fetchNews();</script>
+
+</body>
+
+</html>
